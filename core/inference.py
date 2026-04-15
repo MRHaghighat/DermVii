@@ -95,11 +95,6 @@ SCORE_THRESHOLD = 3  # ≥3 → recommend excision
 
 
 class DermaViiInference:
-    """
-    ONNX Runtime inference engine.
-    Loads once at startup, used for all predictions.
-    """
-
     def __init__(self, onnx_path: str, metrics_path: str):
         self.onnx_path    = onnx_path
         self.metrics_path = metrics_path
@@ -109,7 +104,6 @@ class DermaViiInference:
         self._optimal_threshold = 0.5
 
     def load(self) -> 'DermaViiInference':
-        """Load ONNX session and metrics. Call once at startup."""
         # ONNX Runtime session
         opts = ort.SessionOptions()
         opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
@@ -150,18 +144,13 @@ class DermaViiInference:
         return self._optimal_threshold
 
     def preprocess(self, image: Image.Image) -> np.ndarray:
-        """Resize, normalise, add batch dimension."""
         img = image.convert('RGB').resize((IMAGE_SIZE, IMAGE_SIZE), Image.BILINEAR)
         arr = np.array(img, dtype=np.float32) / 255.0
         arr = (arr - IMAGENET_MEAN) / IMAGENET_STD
-        arr = arr.transpose(2, 0, 1)          # HWC → CHW
-        return arr[np.newaxis, ...]            # add batch dim → (1,3,224,224)
+        arr = arr.transpose(2, 0, 1)         
+        return arr[np.newaxis, ...]   # add batch dim → (1,3,224,224)
 
     def predict(self, image: Image.Image) -> dict[str, Any]:
-        """
-        Run full inference pipeline.
-        Returns structured result dict used by all UI pages.
-        """
         t0    = time.perf_counter()
         arr   = self.preprocess(image)
         outs  = self._session.run(None, {'input': arr})
