@@ -12,8 +12,6 @@ DermVii is a clinical decision support system for dermoscopy image analysis, bui
 
 The system is designed around a **production-realistic deployment pipeline**: trained on a cloud GPU (Google Colab T4), exported as a portable ONNX model, and served locally on CPU with no GPU dependency. Grad-CAM attention maps, Monte Carlo Dropout uncertainty quantification, and a locally-hosted LLM narrative engine complete the clinical output.
 
-> ⚠️ **Research & Educational Use Only.** DermVii is not a medical device and must not be used as a substitute for professional dermatological examination and clinical judgment.
-
 ---
 
 ## Key Features
