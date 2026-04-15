@@ -166,7 +166,6 @@ class DermaViiInference:
         melanoma_prob = float(diag_probs[1])
         benign_prob   = float(diag_probs[0])
 
-        # Apply optimal threshold from ROC analysis
         is_melanoma = melanoma_prob >= self._optimal_threshold
         diagnosis   = 'Melanoma' if is_melanoma else 'Benign'
 
@@ -187,50 +186,47 @@ class DermaViiInference:
             )
             display_label, score_contrib, clinical_desc = clinical
 
-            # Score contribution
             weight      = CRITERIA_WEIGHTS.get(name, 1)
             is_abnormal = score_contrib > 0
             points      = weight if is_abnormal else 0
             seven_point_score += points
 
             criteria_results[name] = {
-                'predicted':      pred_label,
-                'display_label':  display_label,
-                'confidence':     confidence,
-                'score_contrib':  score_contrib,
-                'points':         points,
-                'weight':         weight,
+                'predicted': pred_label,
+                'display_label': display_label,
+                'confidence': confidence,
+                'score_contrib': score_contrib,
+                'points':  points,
+                'weight': weight,
                 'is_abnormal':    is_abnormal,
-                'clinical_desc':  clinical_desc,
-                'all_probs':      {
+                'clinical_desc': clinical_desc,
+                'all_probs': {
                     self._label_decoders.get(name, {}).get(i, str(i)): float(p)
                     for i, p in enumerate(probs)
                 },
             }
 
-        #  Management Recommendation 
         management = self._get_management(seven_point_score, is_melanoma)
         risk_level = self._get_risk_level(seven_point_score, melanoma_prob)
 
         return {
-            'diagnosis':          diagnosis,
-            'is_melanoma':        is_melanoma,
-            'melanoma_prob':      melanoma_prob,
-            'benign_prob':        benign_prob,
-            'threshold_used':     self._optimal_threshold,
+            'diagnosis': diagnosis,
+            'is_melanoma': is_melanoma,
+            'melanoma_prob': melanoma_prob,
+            'benign_prob': benign_prob,
+            'threshold_used': self._optimal_threshold,
             'seven_point_score':  seven_point_score,
             'max_possible_score': 10,
-            'criteria':           criteria_results,
-            'management':         management,
-            'risk_level':         risk_level,
-            'latency_ms':         latency_ms,
+            'criteria': criteria_results,
+            'management':  management,
+            'risk_level': risk_level,
+            'latency_ms': latency_ms,
         }
 
     def benchmark(self, image: Image.Image, n_runs: int = 50) -> dict:
         """Run N inference passes and collect latency statistics."""
         arr = self.preprocess(image)
 
-        # Warm up
         for _ in range(3):
             self._session.run(None, {'input': arr})
 
@@ -242,15 +238,15 @@ class DermaViiInference:
 
         latencies = np.array(latencies)
         return {
-            'n_runs':      n_runs,
-            'mean_ms':     float(latencies.mean()),
-            'std_ms':      float(latencies.std()),
-            'min_ms':      float(latencies.min()),
-            'max_ms':      float(latencies.max()),
-            'p50_ms':      float(np.percentile(latencies, 50)),
-            'p95_ms':      float(np.percentile(latencies, 95)),
-            'p99_ms':      float(np.percentile(latencies, 99)),
-            'throughput':  float(1000 / latencies.mean()),
+            'n_runs': n_runs,
+            'mean_ms': float(latencies.mean()),
+            'std_ms': float(latencies.std()),
+            'min_ms': float(latencies.min()),
+            'max_ms': float(latencies.max()),
+            'p50_ms': float(np.percentile(latencies, 50)),
+            'p95_ms': float(np.percentile(latencies, 95)),
+            'p99_ms': float(np.percentile(latencies, 99)),
+            'throughput': float(1000 / latencies.mean()),
             'all_latencies': latencies.tolist(),
         }
 
@@ -263,30 +259,30 @@ class DermaViiInference:
     def _get_management(score: int, is_melanoma: bool) -> dict:
         if is_melanoma or score >= SCORE_THRESHOLD:
             return {
-                'action':      'Excision Recommended',
-                'urgency':     'High',
+                'action': 'Excision Recommended',
+                'urgency': 'High',
                 'description': 'Lesion exhibits features consistent with malignancy. '
                                'Surgical excision and histopathological examination advised.',
-                'color':       '#DC2626',
-                'icon':        '🔴',
+                'color': '#DC2626',
+                'icon': '🔴',
             }
         elif score >= 1:
             return {
-                'action':      'Clinical Follow-Up',
-                'urgency':     'Medium',
+                'action':  'Clinical Follow-Up',
+                'urgency': 'Medium',
                 'description': 'Lesion shows minor atypical features. '
                                'Clinical monitoring with 3–6 month follow-up recommended.',
-                'color':       '#D97706',
-                'icon':        '🟡',
+                'color': '#D97706',
+                'icon':  '🟡',
             }
         else:
             return {
-                'action':      'No Further Examination',
-                'urgency':     'Low',
+                'action': 'No Further Examination',
+                'urgency': 'Low',
                 'description': 'Lesion exhibits benign characteristics. '
                                'Routine annual skin check recommended.',
-                'color':       '#16A34A',
-                'icon':        '🟢',
+                'color':  '#16A34A',
+                'icon':  '🟢',
             }
 
     @staticmethod
