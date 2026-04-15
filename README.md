@@ -2,7 +2,7 @@
 
 **AI-Assisted Dermoscopy Analysis · 7-Point Checklist · Multi-Task Deep Learning**
 
-![Lesion Analysis](screenshots/Lesion_analysis.png)
+![Lesion Analysis](screenshots/Explanations.png)
 
 ---
 
