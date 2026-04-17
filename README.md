@@ -1,6 +1,6 @@
 # DermVii
 
-# AI-Assisted Dermoscopy Analysis · 7-Point Checklist · Multi-Task Deep Learning**
+## AI-Assisted Dermoscopy Analysis · 7-Point Checklist · Multi-Task Deep Learning
 
 ![Lesion Analysis](screenshots/Explanations.png)
 
@@ -139,7 +139,7 @@ Confusion matrix, ROC curve (AUC = 0.822), per-criterion accuracy bar chart, and
 
 Loss curves, diagnosis accuracy, criteria loss, and per-criterion validation accuracy across all 30 training epochs with the Phase A→B transition marker.
 
-![Training History](screenshots/Training_History.png)
+![Training History](screenshots/Training-History.png)
 
 ---
 
