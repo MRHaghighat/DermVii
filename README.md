@@ -1,6 +1,6 @@
 # DermVii
 
-**AI-Assisted Dermoscopy Analysis · 7-Point Checklist · Multi-Task Deep Learning**
+# AI-Assisted Dermoscopy Analysis · 7-Point Checklist · Multi-Task Deep Learning**
 
 ![Lesion Analysis](screenshots/Explanations.png)
 
